@@ -21,8 +21,6 @@ const handler = NextAuth({
                     email: credentials?.email,
                 })
 
-                console.log(userFound, "deneyeyim seni sende dene beni")
-
                 if (!userFound) throw new Error("Wrong Email");
 
 
@@ -44,7 +42,7 @@ const handler = NextAuth({
         async session({ session }: any) {
             const sessionUser = await User.findOne({ email: session.user.email })
             session.user.id = sessionUser._id.toString();
-
+            session.user.company = sessionUser.company.toString();
             return session
         },
     }

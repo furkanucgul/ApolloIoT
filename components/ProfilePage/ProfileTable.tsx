@@ -8,9 +8,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface Column {
-    id: 'name' | 'code';
+    id: 'date' | 'consump';
     label: string;
     minWidth?: number;
     align?: 'right';
@@ -18,40 +19,14 @@ interface Column {
 }
 
 const columns: readonly Column[] = [
-    { id: 'name', label: 'Tarih', minWidth: 170 },
-    { id: 'code', label: 'Tüketim', minWidth: 100 },
+    { id: 'date', label: 'Tarih', minWidth: 170 },
+    { id: 'consump', label: 'Tüketim', minWidth: 100 },
 ];
 
-interface Data {
-    name: string;
-    code: string;
-}
-
-function createData(
-    name: string,
-    code: string,
-): Data {
-    return { name, code };
-}
-
-const rows = [
-    createData('01.01.2024', 'IN'),
-    createData('01.01.2024', 'CN'),
-    createData('01.01.2024', 'IT'),
-    createData('01.01.2024', 'US'),
-    createData('01.01.2024', 'CA'),
-    createData('01.01.2024', 'AU'),
-    createData('01.01.2024', 'DE'),
-    createData('01.01.2024', 'IE'),
-    createData('01.01.2024', 'MX'),
-    createData('01.01.2024', 'JP'),
-    createData('01.01.2024', 'FR'),
-    createData('United Kingdom', 'GB'),
-];
-
-export default function ProfileTable() {
+export default function ProfileTable({ calculatedConsumption }: any) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [loading, setLoading] = React.useState(false)
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -62,9 +37,16 @@ export default function ProfileTable() {
         setPage(0);
     };
 
+    const handleDelete = () => {
+
+    }
+
+    const reversedConsumption = [...calculatedConsumption].reverse();
+    console.log(reversedConsumption)
+
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-            <TableContainer sx={{ maxHeight: 440 }}>
+            <TableContainer sx={{ maxHeight: 440, position: 'relative' }}>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
                         <TableRow>
@@ -79,12 +61,17 @@ export default function ProfileTable() {
                             ))}
                         </TableRow>
                     </TableHead>
+                    <button
+                        className='absolute right-5 py-3'
+                    >
+                        <DeleteIcon color='error' />
+                    </button>
                     <TableBody>
-                        {rows
+                        {reversedConsumption
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            .map((row) => {
+                            .map((row: any) => {
                                 return (
-                                    <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                                    <TableRow hover role="checkbox" tabIndex={-1} key={row.date}>
                                         {columns.map((column) => {
                                             const value = row[column.id];
                                             return (
@@ -104,7 +91,7 @@ export default function ProfileTable() {
             <TablePagination
                 rowsPerPageOptions={[5, 10, 15]}
                 component="div"
-                count={rows.length}
+                count={reversedConsumption.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}

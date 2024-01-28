@@ -34,20 +34,34 @@ export const options = {
         },
     },
 };
-const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
 
-const data = {
-    labels,
-    datasets: [
-        {
-            label: 'Enerji Tüketimi',
-            data: [250, 300, 350, 250, 399, 259],
-            backgroundColor: '#5e86cc',
-        }
-    ],
-};
+export function ProfileBarChart({ calculatedConsumption }: any) {
 
-export function ProfileBarChart() {
+    const extractDates = (data: any) => {
+        const dates = data.map((item: any) => item.date);
+        return dates;
+    };
+
+    const extractConsumptions = (data: any) => {
+        const consumption = data.map((item: any) => item.consump);
+        return consumption;
+    };
+
+    const labels = extractDates(calculatedConsumption);
+
+    const consumptionNumbers = extractConsumptions(calculatedConsumption);
+
+    const data = {
+        labels,
+        datasets: [
+            {
+                label: 'Enerji Tüketimi',
+                data: consumptionNumbers,
+                backgroundColor: '#5e86cc',
+            }
+        ],
+    };
+
     return (
         <div className='flex w-full justify-center max-h-[300px] lg:max-h-[500px]'>
             <Bar options={options} data={data} height={300} />

@@ -3,11 +3,12 @@ import CloseIcon from '@mui/icons-material/Close';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-import dayjs, { Dayjs } from 'dayjs';
+import { useSession } from 'next-auth/react';
+import { CircularProgress } from '@mui/material';
 
 interface AddEnergyProps {
     open: boolean;
@@ -15,9 +16,39 @@ interface AddEnergyProps {
 }
 
 const AddEnergy = ({ open, setOpen }: AddEnergyProps) => {
-    const [date, setDate] = useState<string | null>(dates[0])
+    const [consumptionInfos, setConsumptionInfos] = useState<any>([])
     const [consumption, setConsumption] = useState(100)
     const [loading, setLoading] = useState(false)
+    const { data: session } = useSession();
+
+    const lastConsumption = consumptionInfos[consumptionInfos.length - 1];
+
+    const minConsumption = consumptionInfos.length > 0 ? lastConsumption.consump : 100
+
+    const findIndexAndMap = (target: any) => {
+        const index = dates.indexOf(target);
+
+        if (index !== -1) {
+
+            // Hedefin bulunduğu indeksten sonraki öğeleri map et
+            const afterTarget = dates.slice(index + 1);
+
+            const mappedResult = afterTarget.map(item => {
+                // Burada özel işlemleri gerçekleştirebilirsiniz
+                return item.toUpperCase(); // Örneğin: Öğeleri büyük harfe çevir
+            });
+
+            return mappedResult;
+        } else {
+            // Hedef değeri bulunamadı
+            console.log(`"${target}" bulunamadı.`);
+            return [];
+        }
+    };
+
+    const minDate = consumptionInfos.length > 0 ? findIndexAndMap(lastConsumption.date) : dates
+
+    const [date, setDate] = useState<string | null>("")
 
     const handleClose = () => {
         setOpen(false)
@@ -28,11 +59,12 @@ const AddEnergy = ({ open, setOpen }: AddEnergyProps) => {
         setLoading(true)
 
         try {
-            const res = await fetch('/api/consumption', {
+            const res = await fetch('/api/consumption/new', {
                 method: 'POST',
                 body: JSON.stringify({
                     date,
-                    consump: consumption
+                    consump: consumption,
+                    userID: session?.user?.id
                 })
             })
             handleClose();
@@ -40,8 +72,20 @@ const AddEnergy = ({ open, setOpen }: AddEnergyProps) => {
             console.log(error)
         } finally {
             setLoading(false)
+            ConsumptionInfo()
         }
     }
+
+    const ConsumptionInfo = async () => {
+        const res = await fetch(`/api/consumption/${session?.user?.id}`)
+        const data = await res.json();
+
+        setConsumptionInfos(data)
+    }
+
+    useEffect(() => {
+        ConsumptionInfo()
+    }, [session])
 
     return (
         <Dialog
@@ -76,16 +120,15 @@ const AddEnergy = ({ open, setOpen }: AddEnergyProps) => {
                             value={consumption}
                             onChange={(e) => setConsumption(parseInt(e.target.value))}
                             InputProps={{
-                                inputProps: { min: 200 }
+                                inputProps: { min: minConsumption + 1 }
                             }}
                         />
                         <Autocomplete
                             disablePortal
                             id="combo-box-demo"
-                            options={dates}
+                            options={minDate}
                             fullWidth
                             renderInput={(params) => <TextField {...params} label="Tarih" required />}
-                            value={date}
                             onChange={(event: any, newValue: string | null) => {
                                 setDate(newValue);
                             }}
@@ -93,9 +136,13 @@ const AddEnergy = ({ open, setOpen }: AddEnergyProps) => {
                     </div>
                     <div className="flex flex-col items-center text-center gap-y-4 relative z-[1]">
                         <button
+                            disabled={loading}
                             type='submit'
-                            className='bg-gradient-to-r from-blue-800 to-blue-500 px-7 py-4 rounded-md text-white font-semibold'
+                            className='bg-gradient-to-r from-blue-800 to-blue-500 px-7 py-4 rounded-md text-white font-semibold flex items-center gap-2'
                         >
+                            {loading && (
+                                <CircularProgress color='warning' size={30} />
+                            )}
                             Kaydet
                         </button>
                     </div>

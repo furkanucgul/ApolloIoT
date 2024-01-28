@@ -1,10 +1,12 @@
 'use client'
 import { useState } from "react";
 import AddEnergy from "./AddEnergy";
+import { useSession } from "next-auth/react";
 
 
-const ProfileHead = () => {
+const ProfileHead = ({ totalConsumption }: any) => {
   const [open, setOpen] = useState(false);
+  const { data: session } = useSession();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -20,6 +22,9 @@ const ProfileHead = () => {
           <p className='text-[#6b686e] text-lg'>
             Aşağıdaki grafiklerden enerji tüketiminizi takip edebilir. Enerji Tüketiminizi Güncelleyebilir. Profil Sayfanızı Buradan Takip Edebilirsiniz. Yapay zeka destekli enerji takip sistemimiz işinizi kolaylaştırır. Enerji giderlerinizde 60% oranında düşüş sağlar.
           </p>
+          <h2>
+            {session?.user?.company} şirketi'nin toplam tüketimi: <span className="font-semibold">{totalConsumption}vh</span>
+          </h2>
         </div>
         <div className='mt-5 lg:mt-0 lg:w-1/2 flex justify-center'>
           <button

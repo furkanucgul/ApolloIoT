@@ -1,10 +1,10 @@
 import { Schema, model, models } from "mongoose";
 
 const ConsumptionSchema = new Schema({
-    // userID: {
-    //     type: Schema.Types.ObjectId,
-    //     ref: 'User'
-    // },
+    userID: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+    },
     date: {
         type: String,
         required: [true, 'Date is required!'],

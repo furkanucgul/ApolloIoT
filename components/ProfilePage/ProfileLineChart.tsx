@@ -35,21 +35,33 @@ const options = {
     },
 };
 
-const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+export function ProfileLineChart({ calculatedConsumption }: any) {
 
-const data = {
-    labels,
-    datasets: [
-        {
-            label: 'Dataset 2',
-            data: [30, 36, 57, 86, 68, 76, 79, 98],
-            borderColor: 'rgb(53, 162, 235)',
-            backgroundColor: 'rgba(53, 162, 235, 0.5)',
-        },
-    ],
-};
+    const extractDates = (data: any) => {
+        const dates = data.map((item: any) => item.date);
+        return dates;
+    };
 
-export function ProfileLineChart() {
+    const extractConsumptions = (data: any) => {
+        const consumption = data.map((item: any) => item.consump);
+        return consumption;
+    };
+
+    const labels = extractDates(calculatedConsumption);
+
+    const consumptionNumbers = extractConsumptions(calculatedConsumption);
+
+    const data = {
+        labels,
+        datasets: [
+            {
+                label: 'Enerji Tüketimi',
+                data: consumptionNumbers,
+                backgroundColor: '#5e86cc',
+            }
+        ],
+    };
+
     return (
         <div className='flex w-full justify-center max-h-[300px] lg:max-h-[500px]'>
             < Line options={options} data={data} height={300} />
