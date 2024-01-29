@@ -60,13 +60,15 @@ const AddEnergy = ({ open, setOpen, isSubmitted, setIsSubmitted }: AddEnergyProp
         e.preventDefault();
         setLoading(true)
 
+        const calculateDifference = consumptionInfos.length > 0 ? consumption - consumptionInfos[consumptionInfos.length - 1].consump : consumption - 0
+
         try {
             const res = await fetch('/api/consumption/new', {
                 method: 'POST',
                 body: JSON.stringify({
                     date,
                     consump: consumption,
-                    difference: consumption - consumptionInfos[consumptionInfos.length - 1].consump,
+                    difference: calculateDifference,
                     userID: session?.user?.id
                 })
             })
@@ -80,19 +82,6 @@ const AddEnergy = ({ open, setOpen, isSubmitted, setIsSubmitted }: AddEnergyProp
         }
     }
 
-    const calculateTotalConsumption = () => {
-        return consumptionInfos.reduce((total, currentItem, index) => {
-            // İlk eleman olduğunda direk değeri kullan
-            if (index === 0) {
-                return total + currentItem.consump;
-            } else {
-                // Diğer elemanlarda bir önceki elemandan çıkar
-                const previousConsump = consumptionInfos[index - 1].consump;
-                return total + (currentItem.consump - previousConsump);
-            }
-        }, 0);
-    };
-
     const ConsumptionInfo = async () => {
         const res = await fetch(`/api/consumption/${session?.user?.id}`)
         const data = await res.json();
@@ -101,8 +90,10 @@ const AddEnergy = ({ open, setOpen, isSubmitted, setIsSubmitted }: AddEnergyProp
     }
 
     useEffect(() => {
-        ConsumptionInfo()
-    }, [session])
+        if (session) {
+            ConsumptionInfo()
+        }
+    }, [session, isSubmitted])
 
     return (
         <Dialog

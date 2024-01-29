@@ -38,7 +38,9 @@ const page = () => {
     }
 
     useEffect(() => {
-        ConsumptionInfo()
+        if (session) {
+            ConsumptionInfo()
+        }
     }, [session, isSubmitted])
 
     const totalConsumption: any = consumptionData.length > 0 ? consumptionData[consumptionData.length - 1].consump : "0"
@@ -58,6 +60,8 @@ const page = () => {
                         <ProfileTable
                             consumptionData={consumptionData}
                             setConsumptionData={setConsumptionData}
+                            isSubmitted={isSubmitted}
+                            setIsSubmitted={setIsSubmitted}
                         />
                     </div>
                     <div className='flex flex-col gap-5 lg:flex-row mt-10'>

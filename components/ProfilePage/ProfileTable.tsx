@@ -12,7 +12,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { CircularProgress } from '@mui/material';
 
 interface Column {
-    id: 'date' | 'consump';
+    id: 'date' | 'difference';
     label: string;
     minWidth?: number;
     align?: 'right';
@@ -21,10 +21,10 @@ interface Column {
 
 const columns: readonly Column[] = [
     { id: 'date', label: 'Tarih', minWidth: 170 },
-    { id: 'consump', label: 'Tüketim', minWidth: 100 },
+    { id: 'difference', label: 'Tüketim', minWidth: 100 },
 ];
 
-export default function ProfileTable({ consumptionData, setConsumptionData }: any) {
+export default function ProfileTable({ consumptionData, setConsumptionData, isSubmitted, setIsSubmitted }: any) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [loading, setLoading] = React.useState(false)
@@ -60,6 +60,7 @@ export default function ProfileTable({ consumptionData, setConsumptionData }: an
                 consumptionData.filter((c: any) => c._id != consumptionData[consumptionData.length - 1]._id)
             )
 
+            setIsSubmitted(!isSubmitted)
         } catch (error) {
             console.log(error)
         } finally {

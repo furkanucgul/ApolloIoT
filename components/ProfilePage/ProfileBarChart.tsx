@@ -43,7 +43,7 @@ export function ProfileBarChart({ consumptionData }: any) {
     };
 
     const extractConsumptions = (data: any) => {
-        const consumption = data.map((item: any) => item.consump);
+        const consumption = data.map((item: any) => item.difference);
         return consumption;
     };
 
