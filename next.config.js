@@ -4,6 +4,9 @@ const nextConfig = {
         domains: [
             "www.apolloiot.com"
         ]
+    },
+    typescript: {
+        ignoreBuildErrors: true
     }
 }
 

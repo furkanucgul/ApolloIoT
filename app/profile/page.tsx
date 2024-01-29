@@ -1,4 +1,3 @@
-
 'use client'
 import LoadingPage from '@/components/LoadingPage'
 import { ProfileBarChart } from '@/components/ProfilePage/ProfileBarChart'
