@@ -17,7 +17,7 @@ const page = () => {
 
     useEffect(() => {
         setIsSessionExist(true)
-        const checkUser = async () => {
+        const CheckUser = async () => {
             const sessionCheck = await getSession()
             if (sessionCheck !== null) {
                 setIsSessionExist(false)
@@ -26,10 +26,10 @@ const page = () => {
             }
         }
 
-        checkUser()
+        CheckUser()
     }, [])
 
-    const consumptionInfo = async () => {
+    const ConsumptionInfo = async () => {
         const res = await fetch(`/api/consumption/${session?.user?.id}`)
         const data = await res.json();
 
@@ -38,7 +38,7 @@ const page = () => {
 
     useEffect(() => {
         if (session) {
-            consumptionInfo()
+            ConsumptionInfo()
         }
     }, [session, isSubmitted])
 
