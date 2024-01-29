@@ -14,6 +14,8 @@ const page = () => {
     const router = useRouter();
     const { data: session } = useSession();
     const [consumptionData, setConsumptionData] = useState([])
+    const [isSubmitted, setIsSubmitted] = useState(false)
+
     useEffect(() => {
         setIsSessionExist(true)
         const checkUser = async () => {
@@ -37,28 +39,11 @@ const page = () => {
 
     useEffect(() => {
         ConsumptionInfo()
-    }, [session])
+    }, [session, isSubmitted])
 
-    const calculateDifferences = (data: any) => {
-        const result = data.map((item: any, index: any) => {
-            if (index === 0) {
-                // İlk eleman olduğunda direk değeri kullan
-                return { ...item, consump: item.consump };
-            } else {
-                // Diğer elemanlarda bir önceki elemandan çıkar
-                const previousConsump = data[index - 1].consump;
-                const consump = item.consump - previousConsump;
-                return { ...item, consump };
-            }
-        });
+    const totalConsumption: any = consumptionData.length > 0 ? consumptionData[consumptionData.length - 1].consump : "0"
 
-        return result;
-    };
-
-    const calculatedConsumption: any = calculateDifferences(consumptionData);
-
-    const totalConsumption: any = consumptionData.length > 0 ? consumptionData[consumptionData.length - 1].consump : "0vh"
-
+    console.log(consumptionData)
 
     return (
         <>
@@ -66,18 +51,21 @@ const page = () => {
                 <main className='flex flex-col px-4 sm:px-6 lg:px-16 font_manrope pt-20 max-w-[1500px]'>
                     <ProfileHead
                         totalConsumption={totalConsumption}
+                        isSubmitted={isSubmitted}
+                        setIsSubmitted={setIsSubmitted}
                     />
                     <div>
                         <ProfileTable
-                            calculatedConsumption={calculatedConsumption}
+                            consumptionData={consumptionData}
+                            setConsumptionData={setConsumptionData}
                         />
                     </div>
                     <div className='flex flex-col gap-5 lg:flex-row mt-10'>
                         <ProfileBarChart
-                            calculatedConsumption={calculatedConsumption}
+                            consumptionData={consumptionData}
                         />
                         <ProfileLineChart
-                            calculatedConsumption={calculatedConsumption}
+                            consumptionData={consumptionData}
                         />
                     </div>
                 </main>

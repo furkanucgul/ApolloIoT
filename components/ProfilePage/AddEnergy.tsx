@@ -13,9 +13,11 @@ import { CircularProgress } from '@mui/material';
 interface AddEnergyProps {
     open: boolean;
     setOpen: (open: boolean) => void;
+    isSubmitted: boolean;
+    setIsSubmitted: (isSubmitted: boolean) => void;
 }
 
-const AddEnergy = ({ open, setOpen }: AddEnergyProps) => {
+const AddEnergy = ({ open, setOpen, isSubmitted, setIsSubmitted }: AddEnergyProps) => {
     const [consumptionInfos, setConsumptionInfos] = useState<any>([])
     const [consumption, setConsumption] = useState(100)
     const [loading, setLoading] = useState(false)
@@ -64,10 +66,12 @@ const AddEnergy = ({ open, setOpen }: AddEnergyProps) => {
                 body: JSON.stringify({
                     date,
                     consump: consumption,
+                    difference: consumption - consumptionInfos[consumptionInfos.length - 1].consump,
                     userID: session?.user?.id
                 })
             })
             handleClose();
+            setIsSubmitted(!isSubmitted)
         } catch (error) {
             console.log(error)
         } finally {
@@ -75,6 +79,19 @@ const AddEnergy = ({ open, setOpen }: AddEnergyProps) => {
             ConsumptionInfo()
         }
     }
+
+    const calculateTotalConsumption = () => {
+        return consumptionInfos.reduce((total, currentItem, index) => {
+            // İlk eleman olduğunda direk değeri kullan
+            if (index === 0) {
+                return total + currentItem.consump;
+            } else {
+                // Diğer elemanlarda bir önceki elemandan çıkar
+                const previousConsump = consumptionInfos[index - 1].consump;
+                return total + (currentItem.consump - previousConsump);
+            }
+        }, 0);
+    };
 
     const ConsumptionInfo = async () => {
         const res = await fetch(`/api/consumption/${session?.user?.id}`)

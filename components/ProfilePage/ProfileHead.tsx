@@ -4,7 +4,7 @@ import AddEnergy from "./AddEnergy";
 import { useSession } from "next-auth/react";
 
 
-const ProfileHead = ({ totalConsumption }: any) => {
+const ProfileHead = ({ totalConsumption, isSubmitted, setIsSubmitted }: any) => {
   const [open, setOpen] = useState(false);
   const { data: session } = useSession();
 
@@ -38,6 +38,8 @@ const ProfileHead = ({ totalConsumption }: any) => {
       <AddEnergy
         open={open}
         setOpen={setOpen}
+        isSubmitted={isSubmitted}
+        setIsSubmitted={setIsSubmitted}
       />
     </>
   )

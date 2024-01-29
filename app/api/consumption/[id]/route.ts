@@ -20,3 +20,20 @@ export const GET = async (req: Request, { params }: any) => {
         })
     }
 }
+
+export const DELETE = async (req: Request, { params }: any) => {
+    try {
+        await connectToDB();
+
+        await Consumption.findByIdAndDelete(params.id)
+
+        return new Response("Last Consumption Number Deleted Succesfully", {
+            status: 200
+        })
+
+    } catch (error) {
+        return new Response("Last Consumption Number is not Deleted!", {
+            status: 500
+        })
+    }
+}

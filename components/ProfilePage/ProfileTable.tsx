@@ -9,6 +9,7 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { CircularProgress } from '@mui/material';
 
 interface Column {
     id: 'date' | 'consump';
@@ -23,10 +24,16 @@ const columns: readonly Column[] = [
     { id: 'consump', label: 'Tüketim', minWidth: 100 },
 ];
 
-export default function ProfileTable({ calculatedConsumption }: any) {
+export default function ProfileTable({ consumptionData, setConsumptionData }: any) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [loading, setLoading] = React.useState(false)
+    const [reversedConsumption, setReversedConsumption] = React.useState([])
+
+    React.useEffect(() => {
+        const reversed: any = [...consumptionData].reverse()
+        setReversedConsumption(reversed)
+    }, [consumptionData])
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -37,12 +44,28 @@ export default function ProfileTable({ calculatedConsumption }: any) {
         setPage(0);
     };
 
-    const handleDelete = () => {
 
+    const handleDelete = async () => {
+        setLoading(true)
+        try {
+            await fetch(`/api/consumption/${consumptionData[consumptionData.length - 1]._id}`, {
+                method: "DELETE"
+            })
+
+            setReversedConsumption(
+                reversedConsumption.filter((c) => c._id != consumptionData[consumptionData.length - 1]._id)
+            )
+
+            setConsumptionData(
+                consumptionData.filter((c: any) => c._id != consumptionData[consumptionData.length - 1]._id)
+            )
+
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setLoading(false)
+        }
     }
-
-    const reversedConsumption = [...calculatedConsumption].reverse();
-    console.log(reversedConsumption)
 
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
@@ -61,11 +84,7 @@ export default function ProfileTable({ calculatedConsumption }: any) {
                             ))}
                         </TableRow>
                     </TableHead>
-                    <button
-                        className='absolute right-5 py-3'
-                    >
-                        <DeleteIcon color='error' />
-                    </button>
+
                     <TableBody>
                         {reversedConsumption
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -97,6 +116,17 @@ export default function ProfileTable({ calculatedConsumption }: any) {
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
             />
+            <button
+                disabled={loading}
+                onClick={handleDelete}
+                className='absolute right-5 py-3'
+            >
+                {loading ? (
+                    <CircularProgress size={25} />
+                ) : (
+                    <DeleteIcon color='error' />
+                )}
+            </button>
         </Paper>
     );
 }

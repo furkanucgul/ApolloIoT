@@ -35,7 +35,7 @@ const options = {
     },
 };
 
-export function ProfileLineChart({ calculatedConsumption }: any) {
+export function ProfileLineChart({ consumptionData }: any) {
 
     const extractDates = (data: any) => {
         const dates = data.map((item: any) => item.date);
@@ -47,9 +47,9 @@ export function ProfileLineChart({ calculatedConsumption }: any) {
         return consumption;
     };
 
-    const labels = extractDates(calculatedConsumption);
+    const labels = extractDates(consumptionData);
 
-    const consumptionNumbers = extractConsumptions(calculatedConsumption);
+    const consumptionNumbers = extractConsumptions(consumptionData);
 
     const data = {
         labels,

@@ -14,7 +14,11 @@ const ConsumptionSchema = new Schema({
         type: Number,
         required: [true, 'Consumption is required!'],
         unique: [true, 'Consumption is has to be different!']
-    }
+    },
+    difference: {
+        type: Number,
+        required: [true, 'Consumption is required!'],
+    },
 })
 
 const Consumption = models.Consumption || model('Consumption', ConsumptionSchema)

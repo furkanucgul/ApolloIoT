@@ -2,7 +2,7 @@ import { connectToDB } from "@/utils/database";
 import Consumption from "@/models/consumption";
 
 export const POST = async (req: Request) => {
-    const { date, consump, userID } = await req.json();
+    const { date, consump, userID, difference } = await req.json();
 
     try {
         await connectToDB();
@@ -10,6 +10,7 @@ export const POST = async (req: Request) => {
         const newConsumption = new Consumption({
             date,
             consump,
+            difference,
             userID
         })
 
