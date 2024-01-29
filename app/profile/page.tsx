@@ -29,7 +29,7 @@ const page = () => {
         checkUser()
     }, [])
 
-    const ConsumptionInfo = async () => {
+    const consumptionInfo = async () => {
         const res = await fetch(`/api/consumption/${session?.user?.id}`)
         const data = await res.json();
 
@@ -38,13 +38,11 @@ const page = () => {
 
     useEffect(() => {
         if (session) {
-            ConsumptionInfo()
+            consumptionInfo()
         }
     }, [session, isSubmitted])
 
     const totalConsumption: any = consumptionData.length > 0 ? consumptionData[consumptionData.length - 1].consump : "0"
-
-    console.log(consumptionData)
 
     return (
         <>
