@@ -310,7 +310,7 @@ const Footer = () => {
                 </div>
                 <div className='py-3 group/portfolio'>
                     <div className='flex flex-col md:flex-row items-center md:justify-end gap-2 text-center'>
-                        <span>© 2023 ArabaKirala. ❤️ ile tasarladı.</span>
+                        <span>© 2023 Apollo IoT. ❤️ ile tasarladı.</span>
                         <a target='_blank' href="https://furkanucgul.github.io">
                             <div className="flex items-center gap-2">
                                 <div className='color-change-5x p-[2px] rounded-full'>
