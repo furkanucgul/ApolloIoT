@@ -33,7 +33,7 @@ const Navbar = () => {
     };
 
     const handleSignOut = () => {
-        signOut({ callbackUrl: 'http://localhost:3000' })
+        signOut({ callbackUrl: 'https://apolloiot.vercel.app' })
     }
 
     return (
@@ -139,12 +139,28 @@ const Navbar = () => {
                         {/* MOBILE DIVIDER CONTENT */}
 
                         <div className='lg:hidden flex flex-col gap-5 px-5 py-3'>
-                            <div className='grid grid-cols-2 gap-3'>
-                                <img
-                                    className='h-[100px] object-cover rounded-md'
-                                    src="https://www.apolloiot.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fdashboard-image.3c35a8e3.webp&w=3840&q=75"
-                                    alt="pics"
-                                />
+                            <div className='grid grid-cols-2 gap-3 items-center'>
+                                <div>
+                                    {session ? (
+                                        <button
+                                            onClick={() => {
+                                                handleSignOut()
+                                                closeDialog()
+                                            }}
+                                            className='px-3 py-2 border-2 rounded-full border-black'
+                                        >
+                                            Çıkış Yap
+                                        </button>
+                                    ) : (
+                                        <Link
+                                            href="/sign-in"
+                                            onClick={closeDialog}
+                                            className='px-3 py-2 border-2 rounded-full border-black'
+                                        >
+                                            Giriş Yap
+                                        </Link>
+                                    )}
+                                </div>
                                 <img
                                     className='h-[100px] object-cover rounded-md'
                                     src="https://www.apolloiot.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fiso-min.1b4ac58b.gif&w=1920&q=75"
