@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 
 const HomeHead = () => {
     return (
@@ -16,9 +17,12 @@ const HomeHead = () => {
                         type="text"
                         placeholder='E-Posta'
                     />
-                    <button className='bg-[#191919] px-3 py-3 sm:py-5 text-white rounded-full absolute right-0 sm:text-lg'>
+                    <Link
+                        href="/profile"
+                        className='bg-[#191919] px-3 py-3 sm:py-5 text-white rounded-full absolute right-0 sm:text-lg'
+                    >
                         10 Gün Ücretsiz Dene
-                    </button>
+                    </Link>
                 </div>
             </div>
             <div className='lg:w-1/2'>

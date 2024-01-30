@@ -53,7 +53,7 @@ const Page = () => {
                         isSubmitted={isSubmitted}
                         setIsSubmitted={setIsSubmitted}
                     />
-                    <div>
+                    <div className='relative'>
                         <ProfileTable
                             consumptionData={consumptionData}
                             setConsumptionData={setConsumptionData}
