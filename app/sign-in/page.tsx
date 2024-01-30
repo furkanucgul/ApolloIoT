@@ -5,7 +5,7 @@ import { getSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
-const page = () => {
+const Page = () => {
     const [isSessionExist, setIsSessionExist] = useState(true)
     const router = useRouter();
 
@@ -26,7 +26,7 @@ const page = () => {
     return (
         <>
             {isSessionExist ? (<LoadingPage />) : (
-                <main className='fixed md:relative top-0 left-0 w-screen bg-white min-h-screen flex flex-col items-center z-[999] md:z-10 md:w-auto md:pt-32 pb-32'>
+                <main className='fixed md:relative top-0 left-0 w-screen bg-white min-h-screen flex flex-col items-center z-[999] md:z-10 md:w-auto md:pt-32'>
                     <SignInForm />
                 </main>
             )}
@@ -35,4 +35,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page
